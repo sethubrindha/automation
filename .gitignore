@@ -1,0 +1,33 @@
+*.env
+.idea/
+.vscode/
+/__pycache/
+*.pyc
+/media/
+*.log
+# *.pem
+*.pid
+node_modules/
+web_builds/
+facts/chromedriver.exe
+dank/client_secret.json
+dank/constants.py
+dank/downloads
+dank/videos
+facts/client_secret.json
+webpack-stats.prod.json
+facts/downloads
+meme_shorts/downloads
+meme_shorts/uploads
+meme_shorts/videos
+.vscode
+meme_shorts/constants.py
+venv/
+# django migrations - need to have migration and init
+**/venv/**
+!**/venv
+!**/migrations/__init__.py
+runscript
+# shell_script
+
+fo_frontend/src/components/config/ConstantsURL.js

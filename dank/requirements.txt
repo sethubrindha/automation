@@ -1,0 +1,9 @@
+requests
+google-auth-oauthlib
+google-api-python-client
+instaloader
+beautifulsoup4
+moviepy
+selenium
+webdriver-manager
+user_agent
