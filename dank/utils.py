@@ -95,13 +95,13 @@ def start_chrome():
     try:
         chromedriver_path = ChromeDriverManager().install()
         chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver.exe')
-        msg(f"Using ChromeDriver executable at: {chromedriver_executable}")
+        print(f"Using ChromeDriver executable at: {chromedriver_executable}")
         service = Service(chromedriver_executable)
         driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.get("https://www.google.com/")
         return driver
     except Exception as e:
-        msg(f"Error starting ChromeDriver: {e}")
+        print(f"Error starting ChromeDriver: {e}")
         raise
     # service = Service(ChromeDriverManager().install())
     # driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -139,7 +139,7 @@ def get_top_videos(driver, top_n=4):
 
 def wait_for_download(file_path, timeout=90):
     start_time = time.time()
-    msg("file_path >>>>>>>>.",file_path)
+    print("file_path >>>>>>>>.",file_path)
     while time.time() - start_time < timeout:
         if os.path.exists(file_path):
             return True
@@ -152,19 +152,18 @@ def download_videos(reel_links, total_duration=0):
 
         # # Extract the shortcode from the URL
         # shortcode = link.split('/')[-2]
-        msg("post >>>>>>",post)
+        print("post >>>>>>",post)
 
         # Download the reel
         # post = instaloader.Post.from_shortcode(L.context, link)
         L.download_post(post, target='downloads')
-        msg("downloaded >>>>>>>")
+        print("downloaded >>>>>>>")
 
         for filename in os.listdir(os.path.join(os.getcwd(), 'downloads')):
             if filename.startswith(post.date_utc.strftime('%Y-%m-%d')) and filename.endswith('.mp4'):
                 # Construct the full path to the downloaded file
                 video_file = os.path.join(os.getcwd(), 'downloads', filename)
                 break
-        msg("video_file >>>>>>>>>>",video_file)
  
         if wait_for_download(video_file):
             video_clip = VideoFileClip(video_file)
@@ -174,7 +173,7 @@ def download_videos(reel_links, total_duration=0):
             if total_duration >= 300:
                 break
         else:
-            msg(f"Error: Download for {video_file} timed out.")
+            print(f"Error: Download for {video_file} timed out.")
 
     return video_files, total_duration
 
@@ -188,11 +187,11 @@ def concatenate_videoclips(driver, video_files=[]):
         driver.find_element(By.XPATH, ignore_button).click()
     except: ...
     timer()
-    msg("ignore button clicked >>>>>.")
+    print("ignore button clicked >>>>>.")
     
     disclimer = video_file = os.path.join(os.getcwd(), 'templates', 'disclimer.mp4')
     driver.find_element(By.XPATH, '//input[@type="file"]').send_keys(disclimer)
-    msg("first file uploaded >>>>>")
+    print("first file uploaded >>>>>")
     timer()
     timer(30)
     for i in range(0,len(video_files)):
@@ -209,7 +208,7 @@ def concatenate_videoclips(driver, video_files=[]):
             driver.find_element(By.XPATH, download_button).click() #download button
             upload_done = True
         except Exception as e:
-            msg("eror >>>>>",e.args)
+            print("eror >>>>>",e.args)
     timer(150)
 
 def get_download_videos(total_duration=0):
@@ -219,7 +218,7 @@ def get_download_videos(total_duration=0):
         if filename.endswith('.mp4'):
             # Construct the full path to the downloaded file
             video_file = os.path.join(os.getcwd(), 'downloads', filename)
-            msg("video_file >>>>>>>>>>",video_file)
+            print("video_file >>>>>>>>>>",video_file)
 
             if wait_for_download(video_file):
                 video_clip = VideoFileClip(video_file)
@@ -230,23 +229,23 @@ def get_download_videos(total_duration=0):
                  break
 
             else:
-                msg(f"Error: Download for {video_file} timed out.")
+                print(f"Error: Download for {video_file} timed out.")
 
 
     return video_files, total_duration
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path): 
-        msg('filename >>>>', filename)
+        print('filename >>>>', filename)
         file_path = os.path.join(folder_path, filename)
 
     # Check if it's a file or directory
         if os.path.isfile(file_path):
-            msg('file_path >>>>', file_path)
+            print('file_path >>>>', file_path)
             os.remove(file_path)
-            msg(f'Removed file: {file_path}')
+            print(f'Removed file: {file_path}')
         elif os.path.isdir(file_path):
-            msg(f'{file_path} is a directory, skipping...')
+            print(f'{file_path} is a directory, skipping...')
 
 def collect_tags_from_files(folder_path):
     tags = []
@@ -258,6 +257,8 @@ def collect_tags_from_files(folder_path):
             with open(file_path, 'r', encoding='utf-8') as file:
                 content = file.read()
                 # Find all words starting with #
-                tags.extend(re.findall(r'#\w+', content))
+                found_tags = [tag[1:] for tag in re.findall(r'#\w+', content)]
+                print(" >>>>>>>>>>>>>", found_tags)
+                tags.extend(found_tags)
     return tags
 
