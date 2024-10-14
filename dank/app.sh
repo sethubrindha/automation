@@ -1,4 +1,4 @@
 # Run the Python script
-python3 main.py
+python main.py
 
-python3 clear_files.py
+python clear_files.py

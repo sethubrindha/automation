@@ -55,8 +55,19 @@ def main():
             print("reel_list >>>>>>",reel_list)
             pages += f'\n@{profile_name} '
             timer(random.randint(30, 60))
+
+        except instaloader.exceptions.AbortDownloadException:
+            try:
+                print("Session expired. Logging in again...")
+                L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+                L.save_session_to_file()
+                print("relogged in >>>>")
+            except instaloader.exceptions.LoginException as e:
+                print('check point required : ',e)
+
         except Exception as e: 
-            print(f"Error: {e.args}")
+            print(f"Error: {e}")
+        
 
     print('reel_list >>>>>',reel_list)
 
