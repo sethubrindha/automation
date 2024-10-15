@@ -31,7 +31,7 @@ def create_db_file():
     conn.commit()
     conn.close()
     
-
+create_db_file()
 class PostManager:
     def filter(self, **kwargs):
         os.makedirs(FOLDER_PATH, exist_ok=True)
