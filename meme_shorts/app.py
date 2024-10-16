@@ -7,7 +7,6 @@ from database_handler import Post
 
 app = Flask(__name__)
 
-L = instaloader.Instaloader()
 # Configuring the upload folder
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -33,13 +32,8 @@ def upload_file():
             shortcode = url.split('/')[-2]
             print("short_code >>>>>>",shortcode)
 
-            # Download the reel
-            post = instaloader.Post.from_shortcode(L.context, shortcode)
-            video_file_name = f"{post.date_utc.strftime('%Y-%m-%d')}.mp4"
-            L.download_post(post, target='downloads')
-            video_path = os.path.join('downloads', video_file_name)
-            print("video_path >>>>>>",video_path)
-            Post.create(video_path=video_path, image_path=image_path)
+            Post.create(video_path=shortcode, image_path=image_path)
+            return render_template('thankyou.html')
 
     return render_template('index.html')
 

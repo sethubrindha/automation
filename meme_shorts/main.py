@@ -3,25 +3,29 @@ from database_handler import Post
 from video_generator import edit_video
 from upload_insta import upload_reel
 from upload_youtube import uploadYtShort
+import instaloader
+from constants import *
 
+L = instaloader.Instaloader()
 
 
 def main(): 
     post_list = Post.objects.filter(is_posted=False)
 
     if post_list:
-        video_path = post_list[0].video_path
+        video_url = post_list[0].video_path
         image_path = post_list[0].image_path
         print(video_path, image_path)
 
-        # Convert to absolute path
-        for filename in os.listdir(os.path.join(os.getcwd(), 'downloads')):
-            if filename.endswith('.mp4'):
-                video_path = os.path.join(os.getcwd(), 'downloads', filename)
-                break
         image_path = os.path.abspath(image_path)
+        # Download the reel
+        post = instaloader.Post.from_shortcode(L.context, video_url)
+        video_file_name = f"{post.date_utc.strftime('%Y-%m-%d')}.mp4"
+        L.download_post(post, target='downloads')
+        video_path = os.path.join('downloads', video_file_name)
+        print("video_path >>>>>>",video_path)
 
-        print(f"Video Path: {video_path}, \n Image Path: {image_path} \n")
+        print(f"Image Path: {image_path} \n")
 
         # Ensure the paths are correct before passing them to the video editor
         if not os.path.exists(video_path):
