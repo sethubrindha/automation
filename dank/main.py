@@ -40,17 +40,21 @@ def main():
             print('profile_name >>>>>>',profile_name)
             profile = instaloader.Profile.from_username(L.context, profile_name)
             print("profile >>>>>",profile)
+
             # Get all reels (posts of type 'igtv' or 'video')
-            # reel_list += [post for post in profile.get_posts() if post.typename in ['GraphVideo', 'GraphSidecar']]
+            reel_list += [post for post in profile.get_posts() if post.typename in ['GraphVideo', 'GraphSidecar']]
             # Limit the number of posts retrieved to 100, for example
-            post_list = profile.get_posts()
-            print('post_list >>>>>>>',post_list)
-            for post in post_list:
-                print(post)  # Print each post's data for debugging
-                if post.is_video:
-                    reel_list.append(post)
-                if len(reel_list) >= 100:
-                    break  # Stop after 100 videos to avoid rate-limiting issues
+            # post_list = list(profile.get_posts())
+            # print('post_list length >>>>>>>', len(post_list))
+            # if post_list:
+            #     for post in post_list:
+            #         print(post, post.typename)
+            #         if post.is_video:
+            #             reel_list.append(post)
+            #             if len(reel_list) >= 100:
+            #                 break
+            # else:
+            #     print("No posts found.")
 
             print("reel_list >>>>>>",reel_list)
             pages += f'\n@{profile_name} '
@@ -59,6 +63,8 @@ def main():
         except instaloader.exceptions.AbortDownloadException:
             try:
                 print("Session expired. Logging in again...")
+                print('INSTAGRAM_USERNAME >>>>>>>',INSTAGRAM_USERNAME)
+                print('INSTAGRAM_PASSWORD >>>>>>>',INSTAGRAM_PASSWORD)
                 L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
                 L.save_session_to_file()
                 print("relogged in >>>>")

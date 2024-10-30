@@ -158,26 +158,29 @@ def download_videos(reel_links, total_duration=0):
         # post = instaloader.Post.from_shortcode(L.context, link)
         L.download_post(post, target='downloads')
         print("downloaded >>>>>>>")
-
+        video_file = None
         for filename in os.listdir(os.path.join(os.getcwd(), 'downloads')):
             if filename.startswith(post.date_utc.strftime('%Y-%m-%d')) and filename.endswith('.mp4'):
+                print("filename >>>>>>",filename)
                 # Construct the full path to the downloaded file
                 video_file = os.path.join(os.getcwd(), 'downloads', filename)
                 break
  
-        if wait_for_download(video_file):
-            video_clip = VideoFileClip(video_file)
-            video_files.append(video_clip)
-            if video_clip.duration <= 60:
-                total_duration += video_clip.duration
-            if total_duration >= 300:
-                break
+        if video_file:
+            if wait_for_download(video_file):
+                video_clip = VideoFileClip(video_file)
+                video_files.append(video_clip)
+                if video_clip.duration <= 60:
+                    total_duration += video_clip.duration
+                if total_duration >= 300:
+                    break
         else:
             print(f"Error: Download for {video_file} timed out.")
 
     return video_files, total_duration
 
-def concatenate_videoclips(driver, video_files=[]):
+def concatenate_videoclips(driver, video_files_list=[]):
+    video_files = random.sample(video_files_list, len(video_files_list))
     driver.get("https://videobolt.net/simple-video-tools/merge")
     timer(20)
     try:

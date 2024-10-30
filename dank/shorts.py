@@ -46,6 +46,8 @@ def main():
             tags=['#shorts']
             )
         print("uploaded >>>>.")
+        post_list[0].is_posted = True
+        post_list[0].save()
 
 if __name__ == "__main__":
     main()
