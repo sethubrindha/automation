@@ -1,3 +1,4 @@
+from constants import email
 
 DESCRIPTION_1 = f'''
 ✨ Content Disclaimer:
@@ -97,6 +98,7 @@ TAMIL_TAG_LIST = [
                 "tamilinstareels"
             ]
 
+TAMIL_TITLE = "Tamil 18+ Memes: Savage Laughs Ahead!"
 
 TAMIL_LIST_OF_PAGES = [
     'https://www.instagram.com/uchiha_veeran/reels/',
