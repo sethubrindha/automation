@@ -28,9 +28,11 @@ def main():
     video_files = []
     reel_list = []
     total_duration = 0
-    selected_pages = select_url()
+    description_1, description_2, title, tags_list, page_list = get_video_details()
+    selected_pages = select_url(page_list)
+
     print("selected_pages >>>>>\n", selected_pages)
-    final_description = DESCRIPTION_1+pages+DESCRIPTION_2
+    final_description = description_1+pages+description_2
     timer()
 
 
@@ -43,18 +45,6 @@ def main():
 
             # Get all reels (posts of type 'igtv' or 'video')
             reel_list += [post for post in profile.get_posts() if post.typename in ['GraphVideo', 'GraphSidecar']]
-            # Limit the number of posts retrieved to 100, for example
-            # post_list = list(profile.get_posts())
-            # print('post_list length >>>>>>>', len(post_list))
-            # if post_list:
-            #     for post in post_list:
-            #         print(post, post.typename)
-            #         if post.is_video:
-            #             reel_list.append(post)
-            #             if len(reel_list) >= 100:
-            #                 break
-            # else:
-            #     print("No posts found.")
 
             print("reel_list >>>>>>",reel_list)
             pages += f'\n@{profile_name} '
@@ -77,7 +67,7 @@ def main():
 
     print('reel_list >>>>>',reel_list)
 
-    final_description = DESCRIPTION_1+pages+DESCRIPTION_2
+    final_description = description_1+pages+description_2
 
     while total_duration < 600 or total_duration > 900:
         print("inside while >>>>")
@@ -109,16 +99,9 @@ def main():
     print("final_video_file >>>>>>",final_video_file)
     # # Upload to YouTube (YouTube API integration code needed here)
 
-    tags_list = [
-        'tamildank', 'tamildankmemes', 'tamilmemes', 'kollywoodmemes', 'tamiltroll',
-        'trolltamil', 'tamiljokes', 'tamilcomedy', 'vadivelumemes', 'trendingtamilmemes',
-        'tamilfunny', 'chennaimemes', 'vetrimaranmemes', 'tamilviral', 'tamiltrending',
-        'tamildankcommunity', 'danktamil'
-    ]
-
     uploadYtvid(
         VIDEO_FILE_NAME=final_video_file, 
-        title="Tamil Dank Memes: Prepare for Uncontrollable Laughter!", 
+        title=title, 
         description=final_description,
         tags=tags_list
         )

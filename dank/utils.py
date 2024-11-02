@@ -15,9 +15,12 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from constants import *
 from user_agent import generate_user_agent
+from yt_constants import * 
 
 L = instaloader.Instaloader()
 # L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+
+LANGUAGES = ['tamil', 'english', 'spanish', 'hindi', 'portuguese', 'arabic', 'japanese']
 
 def msg(
         _message_,
@@ -67,7 +70,7 @@ def start_chrome():
     downloads = os.path.join(os.getcwd(), 'videos')
     prefs = {'download.default_directory': downloads}
     chrome_options.add_experimental_option('prefs', prefs)
-    # chrome_options.add_argument("--headless")  # Enable headless mode
+    chrome_options.add_argument("--headless")  # Enable headless mode
     chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (recommended)
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model (Linux specific)
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
@@ -108,8 +111,8 @@ def start_chrome():
     # driver.get("https://www.google.com/")
     # return driver
 
-def select_url():
-	unique_urls = list(set(LIST_OF_PAGES))
+def select_url(page_list:list):
+	unique_urls = list(set(page_list))
 	random.shuffle(unique_urls)
 	selected_size = random.randint(10, 15)
 	selected_urls = unique_urls[:selected_size]
@@ -265,3 +268,8 @@ def collect_tags_from_files(folder_path):
                 tags.extend(found_tags)
     return tags
 
+
+def get_video_details(language:str | None=LANGUAGES[0]) -> dict:
+        """Returns a dictionary with title and description and tag for the video"""
+        if language == LANGUAGES[0]:
+            return DESCRIPTION_1, DESCRIPTION_2, TAMIL_TITLE, TAMIL_TAG_LIST, TAMIL_LIST_OF_PAGES
