@@ -1,6 +1,3 @@
-# Run the Python script
-workon automation
-
-python main.py
-
-python clear_files.py
+source $HOME/.virtualenvs/automation/bin/activate
+python3 main.py
+python3 clear_files.py
