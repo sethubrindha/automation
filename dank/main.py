@@ -13,8 +13,11 @@ try:
     L.load_session_from_file(INSTAGRAM_USERNAME)
 except:
     # Log in and save session if not already saved
-    L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
-    L.save_session_to_file()
+    try:
+        L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+        L.save_session_to_file()
+    except instaloader.exceptions.LoginException as e:
+        pass
 
 print("Is authenticated:", L.context.is_logged_in)
 
