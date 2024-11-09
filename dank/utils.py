@@ -16,6 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from constants import *
 from user_agent import generate_user_agent
 from yt_constants import * 
+import platform
 
 L = instaloader.Instaloader()
 # L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
@@ -97,7 +98,11 @@ def start_chrome():
     # Initialize Chrome WebDriver
     try:
         chromedriver_path = ChromeDriverManager().install()
-        chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver.exe')
+        print('platform >>>>',platform.system())
+        if platform.system() == "Windows":
+            chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver.exe')
+        else:
+            chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver')
         print(f"Using ChromeDriver executable at: {chromedriver_executable}")
         service = Service(chromedriver_executable)
         driver = webdriver.Chrome(service=service, options=chrome_options)
