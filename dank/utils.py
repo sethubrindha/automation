@@ -98,6 +98,7 @@ def start_chrome():
     # Initialize Chrome WebDriver
     try:
         chromedriver_path = ChromeDriverManager().install()
+        print("chromedriver_path >>>>>>.",chromedriver_path)
         print('platform >>>>',platform.system())
         if platform.system() == "Windows":
             chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver.exe')
