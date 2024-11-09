@@ -17,7 +17,8 @@ except:
         L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
         L.save_session_to_file()
     except instaloader.exceptions.LoginException as e:
-        pass
+        print("login error :", e.args)
+        
 
 print("Is authenticated:", L.context.is_logged_in)
 
