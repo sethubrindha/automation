@@ -44,7 +44,10 @@ def main():
             print("profile >>>>>",profile)
 
             # Get all reels (posts of type 'igtv' or 'video')
-            reel_list += [post for post in profile.get_posts() if post.typename in ['GraphVideo', 'GraphSidecar']]
+            reel_list = [
+                post for post in profile.get_posts()
+                if post.typename in ['GraphVideo', 'GraphSidecar'] and post.likes > 1000
+            ]
 
             print("reel_list >>>>>>",reel_list)
             pages += f'\n@{profile_name} '
