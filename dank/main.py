@@ -19,12 +19,15 @@ except:
         L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
         L.save_session_to_file()
     except instaloader.exceptions.LoginException as e:
-        checkpount_url = extract_instagram_challenge_url(str(e.args))
+        checkpoint_url = extract_instagram_challenge_url(str(e.args))
+        print("checkpoint_url >>>>>>>",checkpoint_url)
         timer()
         login_instagram(driver)
         timer()
-        driver.get(checkpount_url)
+        driver.get(checkpoint_url)
+        print("checkpoint >>>>")
         timer()
+        print("relogin >>>>>>.")
         L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
         L.save_session_to_file()
 

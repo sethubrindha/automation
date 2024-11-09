@@ -138,10 +138,13 @@ def login_instagram(driver):
     driver.get("https://www.instagram.com/accounts/login/")
     timer()
     driver.find_element(By.NAME, "username").send_keys(INSTAGRAM_USERNAME)
+    print("username addded >>>.")
     timer()
     driver.find_element(By.NAME, "password").send_keys(INSTAGRAM_PASSWORD)
+    print("password added >>>>")
     timer()
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
+    print("logged in >>>>.")
     timer()
 
 def get_top_videos(driver, top_n=4):
