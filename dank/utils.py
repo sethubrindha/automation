@@ -111,6 +111,16 @@ def start_chrome():
     # driver.get("https://www.google.com/")
     # return driver
 
+def extract_instagram_challenge_url(text):
+    # Define a regular expression pattern to capture Instagram URLs with "challenge" in the path
+    pattern = r'https:\/\/www\.instagram\.com\/challenge\/[^\s,\'"]+'
+    
+    # Search for the pattern in the provided text
+    match = re.search(pattern, text)
+    
+    # Return the matched URL or None if not found
+    return match.group(0) if match else None
+
 def select_url(page_list:list):
 	unique_urls = list(set(page_list))
 	random.shuffle(unique_urls)

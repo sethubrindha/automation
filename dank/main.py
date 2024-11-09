@@ -8,6 +8,8 @@ from constants import *
 
 L = instaloader.Instaloader()
 
+driver = start_chrome()
+
 try:
     # Load session if exists
     L.load_session_from_file(INSTAGRAM_USERNAME)
@@ -17,8 +19,14 @@ except:
         L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
         L.save_session_to_file()
     except instaloader.exceptions.LoginException as e:
-        print("login error :", e.args)
-        
+        checkpount_url = extract_instagram_challenge_url(str(e.args))
+        timer()
+        login_instagram(driver)
+        timer()
+        driver.get(checkpount_url)
+        timer()
+        L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+        L.save_session_to_file()
 
 print("Is authenticated:", L.context.is_logged_in)
 
@@ -57,20 +65,8 @@ def main():
             pages += f'\n@{profile_name} '
             timer(random.randint(30, 60))
 
-        except instaloader.exceptions.AbortDownloadException:
-            try:
-                print("Session expired. Logging in again...")
-                print('INSTAGRAM_USERNAME >>>>>>>',INSTAGRAM_USERNAME)
-                print('INSTAGRAM_PASSWORD >>>>>>>',INSTAGRAM_PASSWORD)
-                L.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
-                L.save_session_to_file()
-                print("relogged in >>>>")
-            except instaloader.exceptions.LoginException as e:
-                print('check point required : ',e)
-
         except Exception as e: 
             print(f"Error: {e}")
-        
 
     print('reel_list >>>>>',reel_list)
 
@@ -90,7 +86,7 @@ def main():
     video_files_path, duration = get_download_videos()
     print('video_files')
 
-    driver = start_chrome()
+    # driver = start_chrome()
     concatenate_videoclips(driver, video_files_path)
     final_video_file = None
     while not final_video_file:
