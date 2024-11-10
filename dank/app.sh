@@ -1,3 +1,3 @@
-source $HOME/Envs/automation/bin/activate
+workon automation
 python3 main.py
 python3 clear_files.py
