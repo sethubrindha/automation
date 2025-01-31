@@ -9,7 +9,7 @@ The views and opinions in this video are not meant to hurt anyone. We cannot be 
 
 Huge thanks to these incredible creators for their amazing content! Make sure to follow them for the latest trends and memes:
 
-Instagram:
+Instagram: \n
 '''
 
 DESCRIPTION_2 = f'''

@@ -8,7 +8,7 @@ import random
 import requests
 import time
 from bs4 import BeautifulSoup
-from moviepy.editor import VideoFileClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -71,29 +71,19 @@ def start_chrome():
     downloads = os.path.join(os.getcwd(), 'videos')
     prefs = {'download.default_directory': downloads}
     chrome_options.add_experimental_option('prefs', prefs)
-    chrome_options.add_argument("--headless")  # Enable headless mode
+    # chrome_options.add_argument("--headless")  # Enable headless mode
     chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (recommended)
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model (Linux specific)
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Bypass bot detection
+    # chrome_options.add_argument("--start-maximized")  # Open in full screen
+
     # Detach browser so it doesn't close when the script ends
     chrome_options.add_experimental_option("detach", True)
     
     # Set user agent
     user_agent = generate_user_agent()
     chrome_options.add_argument(f'user-agent={user_agent}')
-    
-    # Set proxy (change IP)
-    # proxy = "http://your_proxy_ip:your_proxy_port"
-    # Get list of proxies
-    # proxies = get_proxies()
-
-    # # Select a random proxy from the list
-    # proxy = random.choice(proxies)
-    # chrome_options.add_argument(f'--proxy-server={proxy}')
-    
-    # Open in incognito mode
-    # chrome_options.add_argument("--incognito")
     
     # Initialize Chrome WebDriver
     try:
@@ -161,7 +151,6 @@ def get_top_videos(driver, top_n=4):
 
 def wait_for_download(file_path, timeout=90):
     start_time = time.time()
-    print("file_path >>>>>>>>.",file_path)
     while time.time() - start_time < timeout:
         if os.path.exists(file_path):
             return True
@@ -192,7 +181,9 @@ def download_videos(reel_links, total_duration=0):
             if wait_for_download(video_file):
                 video_clip = VideoFileClip(video_file)
                 video_files.append(video_clip)
+                print('video_clip.duration >>>>>>>>>>>>',video_clip.duration)
                 if video_clip.duration <= 60:
+                    print(f"post : https://www.instagram.com/p/{post.shortcode}/")
                     total_duration += video_clip.duration
                 if total_duration >= 300:
                     break
@@ -212,15 +203,18 @@ def concatenate_videoclips(driver, video_files_list=[]):
         driver.find_element(By.XPATH, ignore_button).click()
     except: ...
     timer()
-    print("ignore button clicked >>>>>.")
+    print("ignore button clicked ...")
     
-    disclimer = video_file = os.path.join(os.getcwd(), 'templates', 'disclimer.mp4')
+    disclimer = os.path.join(os.getcwd(),'dank' , 'templates', 'disclimer.mp4')
     driver.find_element(By.XPATH, '//input[@type="file"]').send_keys(disclimer)
-    print("first file uploaded >>>>>")
+    print("first file uploaded ...")
     timer()
     timer(30)
+    clip = 1
     for i in range(0,len(video_files)):
+        print("uploaded clip :", clip)
         driver.find_element(By.XPATH, '//input[@type="file"]').send_keys(video_files[i])
+        clip += 1
         timer(20)
     timer(20)
     upload_done = False
@@ -233,42 +227,41 @@ def concatenate_videoclips(driver, video_files_list=[]):
             driver.find_element(By.XPATH, download_button).click() #download button
             upload_done = True
         except Exception as e:
-            print("eror >>>>>",e.args)
+            print("error :",e.args)
     timer(150)
 
-def get_download_videos(total_duration=0):
-    video_files = []
-
-    for filename in os.listdir(os.path.join(os.getcwd(), 'downloads')):
+def get_download_videos(total_duration=0, download_path=None, video_files=[]):
+    for filename in os.listdir(download_path):
         if filename.endswith('.mp4'):
-            # Construct the full path to the downloaded file
-            video_file = os.path.join(os.getcwd(), 'downloads', filename)
-            print("video_file >>>>>>>>>>",video_file)
-
-            if wait_for_download(video_file):
-                video_clip = VideoFileClip(video_file)
-                video_files.append(video_file)
-                if video_clip.duration <= 60:
-                    total_duration += video_clip.duration
-                if total_duration >= 300:
-                 break
-
+            video_path = os.path.join(download_path, filename)  # Correct file path
+            print("video_file :", filename)
+            
+            if wait_for_download(video_path):  # Pass full video path
+                try:
+                    video_clip = VideoFileClip(video_path)  # Use file, not folder
+                    video_files.append(video_path)
+                    
+                    if video_clip.duration <= 60:
+                        total_duration += video_clip.duration
+                    
+                    if total_duration >= 300:
+                        break
+                except OSError as e:
+                    print(f"Error processing {video_path}: {e}")
             else:
-                print(f"Error: Download for {video_file} timed out.")
-
-
+                print(f"Error: Download for {video_path} timed out.")
     return video_files, total_duration
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path): 
-        print('filename >>>>', filename)
+        print('filename :', filename)
         file_path = os.path.join(folder_path, filename)
 
     # Check if it's a file or directory
         if os.path.isfile(file_path):
-            print('file_path >>>>', file_path)
+            print('file_path :', file_path)
             os.remove(file_path)
-            print(f'Removed file: {file_path}')
+            print(f'Removed file : {file_path}')
         elif os.path.isdir(file_path):
             print(f'{file_path} is a directory, skipping...')
 
@@ -283,12 +276,12 @@ def collect_tags_from_files(folder_path):
                 content = file.read()
                 # Find all words starting with #
                 found_tags = [tag[1:] for tag in re.findall(r'#\w+', content)]
-                print(" >>>>>>>>>>>>>", found_tags)
+                print("tags :", found_tags)
                 tags.extend(found_tags)
     return tags
 
 
 def get_video_details(language:str | None=LANGUAGES[0]) -> dict:
-        """Returns a dictionary with title and description and tag for the video"""
-        if language == LANGUAGES[0]:
-            return DESCRIPTION_1, DESCRIPTION_2, TAMIL_TITLE, TAMIL_TAG_LIST, TAMIL_LIST_OF_PAGES
+    """Returns a dictionary with title and description and tag for the video"""
+    if language == LANGUAGES[0]:
+        return DESCRIPTION_1, DESCRIPTION_2, TAMIL_TITLE, TAMIL_TAG_LIST, TAMIL_LIST_OF_PAGES
