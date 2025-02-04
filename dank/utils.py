@@ -204,12 +204,7 @@ def concatenate_videoclips(driver, video_files_list=[]):
     except: ...
     timer()
     print("ignore button clicked ...")
-    
-    disclimer = os.path.join(os.getcwd(),'dank' , 'templates', 'disclimer.mp4')
-    driver.find_element(By.XPATH, '//input[@type="file"]').send_keys(disclimer)
-    print("first file uploaded ...")
-    timer()
-    timer(30)
+
     clip = 1
     for i in range(0,len(video_files)):
         print("uploaded clip :", clip)
