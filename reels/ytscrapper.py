@@ -4,6 +4,9 @@ import random
 import requests
 import subprocess
 from constants import CHANNEL_IDS
+from pytube import YouTube
+import yt_dlp
+
 
 class YTScrapper:
         def __init__(self, download_path, apikeys):
@@ -34,9 +37,26 @@ class YTScrapper:
             return video_id, title
 
         def download_youtube_short(self, video_id):
-            video_url = f"https://www.youtube.com/shorts/{video_id}"
-            command = [
-                "yt-dlp", "-f", "mp4", "-o", self.path, video_url
-            ]
-            subprocess.run(command, check=True)
+            try:
+                url = f'https://www.youtube.com/shorts/{video_id}'
+                options = {
+                    'format': 'best',
+                    'outtmpl': self.path,
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+                }
+                with yt_dlp.YoutubeDL(options) as ydl:
+                    ydl.download([url])
+                print("Video downloaded successfully.")
+            
+            except Exception as e:
+                print(f"Error: {e}")
+
+        #     command = [
+        #         "yt-dlp", "-f", "mp4", "-o", self.path, video_url
+        #     ]
+        #     subprocess.run(command, check=True)
+
+        # Download video using requests
+
+
 
