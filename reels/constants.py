@@ -3,9 +3,9 @@ INSTAGRAM_ACCESS_TOKEN = "IGAAQRUs9awr1BZAFB6UWd2UVdQV0hqSWF6SmQ2NGZAKYVZAJbTVLZ
 INSTAGRAM_USER_ID = "17841410491811532"  # Get this from Instagram Graph API
 
 CREDENTIALS = [{'user_name':'sethu.emedhub@gmail.com',
-                       'apikey':'AIzaSyC-OKpIxUnle4ofLzcruoo5PrUV8HoyQBA'}, 
-                      {'user_name':'sefatom834@owlny.com',
-                       'apikey':'AIzaSyARwpjuG65rfgVvjJ8YTIYFwbvbvyw9aEo'}]
+                'apikey':'AIzaSyC-OKpIxUnle4ofLzcruoo5PrUV8HoyQBA'}, 
+                {'user_name':'sefatom834@owlny.com',
+                'apikey':'AIzaSyARwpjuG65rfgVvjJ8YTIYFwbvbvyw9aEo'}]
 
 INSTAGRAM_PASSWORD = 'sethupathi@123'
 
