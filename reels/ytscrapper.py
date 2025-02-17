@@ -60,3 +60,14 @@ class YTScrapper:
 
 
 
+import subprocess
+
+def download_video(video_url):
+    try:
+        # Download the video using the you-get tool
+        subprocess.run(['you-get', video_url], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error downloading video: {e}")
+
+video_url = 'https://www.youtube.com/shorts/HoZmfq6PklE'  # Replace with actual video ID
+download_video(video_url)
