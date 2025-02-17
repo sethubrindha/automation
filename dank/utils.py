@@ -71,7 +71,7 @@ def start_chrome():
     downloads = os.path.join(os.getcwd(), 'videos')
     prefs = {'download.default_directory': downloads}
     chrome_options.add_experimental_option('prefs', prefs)
-    # chrome_options.add_argument("--headless")  # Enable headless mode
+    chrome_options.add_argument("--headless")  # Enable headless mode
     chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (recommended)
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model (Linux specific)
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
