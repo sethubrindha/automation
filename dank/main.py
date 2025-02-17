@@ -4,6 +4,7 @@ from utils import *
 from constants import *
 from instascrapper import InstaScrapper
 from editor import VideoEditor
+from time import sleep
 
 def main():
     description_1, description_2, title, tags_list, page_list = get_video_details()
@@ -19,6 +20,7 @@ def main():
         print('profile_name :',profile_name)
         description_1 = description_1+f'{profile_name}\n'
         scrapper.scrape(profile_name)
+        sleep(30)
         
     scrapper.logout()
 
