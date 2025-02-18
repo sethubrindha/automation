@@ -14,3 +14,6 @@ CHANNEL_IDS = [
     "UCAq_cxYupJT7OUlI-8u1P_Q",  # Rabi
     "UCueYcgdqos0_PzNOq81zAFg"   # pardhabangal
 ]
+
+PAGE_LIST = ['comedy_vibezz_', 'raabi_officiall', 'parithabangal_core_fan', 'vjsiddhu_vlogs']
+
