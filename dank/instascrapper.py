@@ -1,39 +1,73 @@
 import os
+import time
+import random
 from instagrapi import Client, exceptions
 
-
-class InstaScrapper:
+class InstaScraper:
     def __init__(self, username, password, directory):
         self.client = Client()
         self.directory = directory
-        self.client.login(username, password)
-        print("✅ Logged in successfully!")
+        self.session_file = f"{username}_session.json"
+
+        # Try using an existing session for human-like behavior
+        if os.path.exists(self.session_file):
+            self.client.load_settings(self.session_file)
+            print("✅ Loaded previous session.")
+        else:
+            print("🔑 Logging into Instagram...")
+            time.sleep(random.uniform(3, 6))  # Simulate human delay
+            self.client.login(username, password)
+            self.client.dump_settings(self.session_file)
+            print("✅ Successfully logged in!")
 
     def scrape(self, profile):
+        """Fetch reels from a given profile."""
+        print(f"🔍 Searching for {profile}...")
+        time.sleep(random.uniform(2, 5))  # Human-like delay
+
         try:
             self.user_id = self.client.user_id_from_username(profile)
-        except exceptions.UserNotFound: self.user_id=None
-        self.download_reels()
+            print(f"✅ Found user ID: {self.user_id}")
+            self.browse_profile()
+            self.download_reels()
+        except exceptions.UserNotFound:
+            print("❌ User not found.")
+            self.user_id = None
+
+    def browse_profile(self):
+        """Simulate human-like browsing before downloading reels."""
+        print("👀 Viewing profile page...")
+        time.sleep(random.uniform(4, 8))  # Simulating a human checking the profile
+        self.client.user_info(self.user_id)  # Fetch user details
 
     def ensure_directory_exists(self):
-        """Ensure the directory exists, create if not."""
+        """Ensure the target directory exists."""
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
 
     def download_reels(self):
-        """Download recent reels from the target user."""
+        """Download reels only if they have high engagement."""
         if self.user_id:
-            reels = self.client.user_clips(self.user_id, 5) # Get 5 recent reels
+            print("📥 Fetching recent reels...")
+            reels = self.client.user_clips(self.user_id, 5)  # Fetch latest 5 reels
             self.ensure_directory_exists()
+            time.sleep(random.uniform(2, 4))  # Simulate API call delay
 
             for reel in reels:
-                print("reel likes", reel.like_count)
+                print(f"🎥 Reel has {reel.like_count} likes.")
+                
                 if reel.like_count > 1500:
+                    print("💾 High-engagement reel detected, downloading...")
                     try:
+                        time.sleep(random.uniform(5, 10))  # Simulate a real user delay
                         media_path = self.client.video_download(reel.id, self.directory)
-                        print(f"Downloaded reel: {media_path}")
-                    except: ...
+                        print(f"✅ Downloaded: {media_path}")
+                    except Exception as e:
+                        print(f"⚠️ Failed to download reel: {e}")
 
     def logout(self):
+        """Logout safely to avoid detection."""
+        print("🔒 Logging out...")
+        time.sleep(random.uniform(3, 6))  # Human-like logout delay
         self.client.logout()
-
+        print("✅ Logged out successfully.")
