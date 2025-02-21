@@ -2,7 +2,7 @@ import os
 from upload_youtube import uploadYtvid
 from utils import *
 from constants import *
-from instascrapper import InstaScrapper
+from instascrapper import InstaScraper
 from editor import VideoEditor
 from time import sleep
 
@@ -14,7 +14,7 @@ def main():
     download_path = os.path.join(os.path.dirname(__file__), 'downloads')
     timer()
 
-    scrapper = InstaScrapper(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD, download_path)
+    scrapper = InstaScraper(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD, download_path)
     for page_url in selected_pages:
         profile_name = page_url[26:-7]
         print('profile_name :',profile_name)
