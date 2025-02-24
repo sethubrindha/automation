@@ -8,16 +8,23 @@ class InstaScrapper:
         self.client = Client()
         self.directory = directory
         self.page = page
+        self.username = username
+        self.password = password
+        self.client.delay_range = [5, 15]
+        self.session_file = f"{username}_session.json"
+        self.login()
 
-        # Use cached login if available
-        session_file = f"{username}_session.json"
-        if os.path.exists(session_file):
-            self.client.load_settings(session_file)
+
+    def login(self):
+        if os.path.exists(self.session_file):
+            self.client.load_settings(self.session_file)
             print("✅ Loaded previous session.")
         else:
-            self.client.login(username, password)
-            self.client.dump_settings(session_file)
-            print("✅ Logged in successfully!")
+            print("🔑 Logging into Instagram...")
+            time.sleep(random.uniform(3, 6))  # Simulate human delay
+            self.client.login(self.username, self.password)
+            self.client.dump_settings(self.session_file)
+            print("✅ Successfully logged in!")
 
     def Ingester(self):
         """Main function to download and upload reels."""
