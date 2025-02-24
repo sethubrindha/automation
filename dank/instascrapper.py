@@ -48,9 +48,7 @@ class InstaScraper:
             self.reset_session()
             self.scrape(profile)  # Retry after resetting session
         except exceptions.LoginRequired:
-            print("🔒 Login required. Please re-login.")
-            self.reset_session()
-            self.scrape(profile)
+            pass
 
     def browse_profile(self):
         """Simulate human-like browsing before downloading reels."""
