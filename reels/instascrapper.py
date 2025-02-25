@@ -10,7 +10,7 @@ class InstaScrapper:
         self.page = page
         self.username = username
         self.password = password
-        self.client.delay_range = [5, 15]
+        self.client.delay_range = [15, 60]
         self.session_file = f"{username}_session.json"
         self.login()
 
