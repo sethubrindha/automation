@@ -64,11 +64,12 @@ def get_proxies():
     
     return proxies
 
-def start_chrome():
+def start_chrome(downloads_path=None):
     chrome_options = webdriver.ChromeOptions()
     
     # Set download directory
-    downloads = os.path.join(os.getcwd(), 'videos')
+    downloads = downloads_path if downloads_path else os.path.join(os.getcwd(), 'videos')
+    print('download_default_directory :', downloads)
     prefs = {'download.default_directory': downloads}
     chrome_options.add_experimental_option('prefs', prefs)
     chrome_options.add_argument("--headless")  # Enable headless mode
@@ -88,8 +89,8 @@ def start_chrome():
     # Initialize Chrome WebDriver
     try:
         chromedriver_path = ChromeDriverManager().install()
-        print("chromedriver_path >>>>>>.",chromedriver_path)
-        print('platform >>>>',platform.system())
+        print("chromedriver_path :",chromedriver_path)
+        print('platform :',platform.system())
         if platform.system() == "Windows":
             chromedriver_executable = os.path.join(os.path.dirname(chromedriver_path), 'chromedriver.exe')
         else:
@@ -216,10 +217,12 @@ def concatenate_videoclips(driver, video_files_list=[]):
     while not upload_done:
         try:
             blur_button = "//div[contains(text(), 'Blurred')]"
+            print('Blur button clicked')
             driver.find_element(By.XPATH, blur_button).click() #bg blur button
             timer()
             download_button = "//div[contains(text(), 'Merge & Download')]"
             driver.find_element(By.XPATH, download_button).click() #download button
+            print('Download button clicked')
             upload_done = True
         except Exception as e:
             print("error :",e.args)

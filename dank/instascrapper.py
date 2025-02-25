@@ -12,8 +12,12 @@ class InstaScraper:
         self.password = password
         self.directory = directory
         self.session_file = f"{username}_session.json"
-        self.client.delay_range = [5, 15]
+        self.client.delay_range = [15, 60]
         self.login()
+
+    def __del__(self):
+        """Ensure logout when the object is deleted."""
+        self.logout()
 
     def login(self):
         if os.path.exists(self.session_file):
@@ -38,28 +42,19 @@ class InstaScraper:
             self.download_reels()
         except exceptions.UserNotFound:
             print("❌ User not found.")
-            self.user_id = None
-        except requests.exceptions.RetryError as e:
+        except requests.exceptions.RetryError:
             print("⚠️ Too many requests! Retrying with backoff...")
             self.handle_rate_limit(profile)
-
         except urllib3.exceptions.MaxRetryError:
             print("🔄 Max retries exceeded. Restarting session...")
             self.reset_session()
-            self.scrape(profile)  # Retry after resetting session
+            self.scrape(profile)
         except exceptions.LoginRequired:
-            pass
-
-    def browse_profile(self):
-        """Simulate human-like browsing before downloading reels."""
-        print("👀 Viewing profile page...")
-        time.sleep(random.uniform(4, 8))  # Simulating a human checking the profile
-        self.client.user_info(self.user_id)  # Fetch user details
-
-    def ensure_directory_exists(self):
-        """Ensure the target directory exists."""
-        if not os.path.exists(self.directory):
-            os.makedirs(self.directory)
+            print("🔑 Session expired! Re-logging in...")
+            self.reset_session()
+            self.scrape(profile)  # Retry after login
+        except Exception as e:
+            print(f"⚠️ Unexpected error: {e}")
 
     def download_reels(self):
         """Download reels only if they have high engagement."""
@@ -71,15 +66,27 @@ class InstaScraper:
 
             for reel in reels:
                 print(f"🎥 Reel has {reel.like_count} likes.")
-                
                 if reel.like_count > 1500:
                     print("💾 High-engagement reel detected, downloading...")
                     try:
                         time.sleep(random.uniform(5, 10))  # Simulate a real user delay
                         media_path = self.client.video_download(reel.id, self.directory)
                         print(f"✅ Downloaded: {media_path}")
+                    except exceptions.ClientError as e:
+                        print(f"⚠️ API Error: {e}")
                     except Exception as e:
                         print(f"⚠️ Failed to download reel: {e}")
+
+    def browse_profile(self):
+        """Simulate human-like browsing before downloading reels."""
+        print("👀 Viewing profile page...")
+        time.sleep(random.uniform(4, 8))  # Simulating a human checking the profile
+        self.client.user_info(self.user_id)  # Fetch user details
+
+    def ensure_directory_exists(self):
+        """Ensure the target directory exists."""
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
 
     def logout(self):
         """Logout safely to avoid detection."""

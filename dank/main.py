@@ -12,6 +12,8 @@ def main():
 
     print("selected_pages :\n", selected_pages)
     download_path = os.path.join(os.path.dirname(__file__), 'downloads')
+    video_download_path = os.path.join(os.path.dirname(__file__), 'videos')
+    pickle_file_path = os.path.join(os.path.dirname(__file__), 'client_secret.json')
     timer()
 
     scrapper = InstaScraper(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD, download_path)
@@ -24,10 +26,10 @@ def main():
         
     scrapper.logout()
 
-    editor = VideoEditor(download_path)
+    editor = VideoEditor(download_path, video_download_path)
     final_video_file = editor.edit()
 
-    uploadYtvid(VIDEO_FILE_NAME=final_video_file, title=title, description=description_1+description_2, tags=tags_list)
+    uploadYtvid(VIDEO_FILE_NAME=final_video_file, title=title, description=description_1+description_2, tags=tags_list, pickle_file_path=pickle_file_path)
     editor.clear_folder()
     print("Done!")
 

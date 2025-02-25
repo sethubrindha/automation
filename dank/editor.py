@@ -3,8 +3,8 @@ import random
 from utils import start_chrome, get_download_videos, concatenate_videoclips, timer
 
 class VideoEditor:
-    def __init__(self, download_path):
-        self.driver = start_chrome()
+    def __init__(self, download_path, video_download_path):
+        self.driver = start_chrome(video_download_path)
         self.duration = 0
         self.video_files = []
         self.download_path = download_path
@@ -13,15 +13,15 @@ class VideoEditor:
 
     def align_videos(self):
         random.shuffle(self.video_files_path)
-        final_list = [os.path.join(os.getcwd(),'dank' , 'templates', 'disclimer.mp4')]# Initialize final list with first element
+        final_list = [os.path.join(os.getcwd(),'dank' , 'templates', 'disclimer.mp4')]
         for num in self.video_files_path:
             final_list.append(num)
-            final_list.append(random.choice(self.list_2))
+            # final_list.append(random.choice(self.list_2)) #break list
         return final_list
 
     def edit(self):
         self.video_files_path, self.duration = get_download_videos(self.duration, self.download_path)
-        concatenate_videoclips(self.driver, self.video_files_path)
+        concatenate_videoclips(self.driver, self.align_videos())
         while not self.final_video_file:
             for filename in os.listdir(os.path.join(os.getcwd(), 'dank', 'videos')):
                 if filename.endswith('.mp4'):

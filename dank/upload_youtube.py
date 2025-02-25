@@ -8,9 +8,10 @@ API_NAME = 'youtube'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
 
-def uploadYtvid(VIDEO_FILE_NAME='', title='', description='', tags=[], retries=3):
+def uploadYtvid(VIDEO_FILE_NAME='', title='', description='', tags=[], retries=3, pickle_file_path=CLIENT_SECRET_FILE):
     print("Inside upload video to YouTube...")
-    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+    print('CLIENT_SECRET_FILE :', pickle_file_path)
+    service = Create_Service(pickle_file_path, API_NAME, API_VERSION, SCOPES)
 
     request_body = {
         'snippet': {
