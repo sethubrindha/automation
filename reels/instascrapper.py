@@ -66,7 +66,7 @@ class InstaScrapper:
 
     def randomize_user_agent(self):
         """Set a random user-agent for every login."""
-        user_agent = self.get_user_agent_from_session(self.username)
+        user_agent = self.get_user_agent_from_session()
         user_agent = user_agent if user_agent else self.ua.random
         self.client.private.headers["User-Agent"] = user_agent
         print(f"🛠️ Using User-Agent: {user_agent}")
