@@ -53,6 +53,10 @@ class InstaScraper:
             print("🔑 Session expired! Re-logging in...")
             self.reset_session()
             self.scrape(profile)  # Retry after login
+        except exceptions.ClientForbiddenError:
+            print("⚠️ Client forbidden! Re-logging in...")
+            self.reset_session()
+            self.scrape(profile)  # Retry after login
         except Exception as e:
             print(f"⚠️ Unexpected error: {e}")
 
